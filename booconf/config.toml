@@ -1,0 +1,33 @@
+# Include another config file
+include = "booconf2/config.toml"
+
+[glob_vars]
+variable = "This is a variable"
+value_Listened = "listen(script/example)"
+value_Polled = "poll(2s, script/examplePoll)"
+
+[main]
+bar = ["bar1", "bar2"]
+
+[bars.bar1]
+width = "10%"
+offset_x = "20px"
+position = "TL"
+left_contents = "app_launcher"
+
+[bars.bar2]
+width = "10%"
+offset_x = "20px"
+position = "TR"
+left_contents = "date"
+
+[boo.app_launcher]
+# config for app_launcher (example)
+
+[boo.date]
+# config for date (example)
+
+[custom.custom_time]
+time = "poll(1s, script/get_time)"
+type = "label"
+content = "<icon> ${time}"
