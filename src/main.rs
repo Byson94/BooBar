@@ -1,28 +1,32 @@
 mod args;
 mod config;
 mod core;
-mod runtime;
 
 use args::{Cli, Commands};
 use clap::Parser;
-use config::lua_loader::load_lua_config;
-use runtime::runtime::Runtime;
+use config::rhai_loader::load_rhai_config;
+// use config::runtime::Runtime;
 
 fn main() {
     let cli = Cli::parse();
 
-    if let Some(Commands::Validate) = &cli.command {
-        match Runtime::from_script(&cli.config) {
-            Ok((_rt, cfg)) => println!("Valid config:\n{:#?}", cfg),
-            Err(e) => eprintln!("Config validation failed: {}", e),
-        }
-    } else {
-        match Runtime::from_script(&cli.config) {
-            Ok((rt, cfg)) => {
-                // println!("{:?}", &cfg); // debug line
-                core::start_ui(rt, &cfg);
+    match cli.command {
+        Some(Commands::Validate) => {
+            match load_rhai_config(&cli.config) {
+                Ok((cfg, _script)) => println!("Valid config:\n{:#?}", cfg),
+                Err(e) => eprintln!("Config validation failed: {}", e),
             }
-            Err(e) => eprintln!("Error loading config: {}", e),
+        },
+        Some(Commands::Run { window_name }) => {
+            match load_rhai_config(&cli.config) {
+                Ok((cfg, _script)) => {
+                    core::start_ui(/* rt = */ (), &cfg, window_name);
+                }
+                Err(e) => eprintln!("Error loading config: {}", e),
+            }
+        },
+        None => {
+            eprintln!("No command found: {{cli.command = {:?}}}", cli.command)
         }
     }
 }

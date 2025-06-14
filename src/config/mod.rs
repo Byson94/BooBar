@@ -1,24 +1,27 @@
-use mlua::Lua;
+use rhai::{Engine, Scope, Dynamic};
 use std::collections::HashMap;
+use std::fs;
+use std::path::Path;
 
-pub mod lua_loader;
+pub mod rhai_loader;
 
 #[derive(Debug, Clone)]
 pub struct MainConfig {
-    pub main: Option<MainSection>,
-    pub bars: HashMap<String, Bar>,
-    pub boo: HashMap<String, mlua::Value>,
+    pub windows: HashMap<String, Windows>,
+    pub boo: HashMap<String, Dynamic>,
     pub custom: HashMap<String, CustomWidget>,
 }
 
 #[derive(Debug, Clone)]
 pub struct MainSection {
-    pub bar: Vec<String>,
+    pub windows: Vec<String>,
 }
 
 #[derive(Debug, Clone)]
-pub struct Bar {
+pub struct Windows {
     pub width: Option<String>,
+    pub height: Option<String>,
+    pub win_type: Option<String>,
     pub offset_x: Option<String>,
     pub position: Option<String>,
     pub left_contents: Option<String>,
